@@ -6,6 +6,7 @@ end
 
 use Rack::MethodOverride
 
-#ItemsController
-#use UsersController
+use TicketsController
+use ConsultantsController
+use ClientsController
 run ApplicationController
