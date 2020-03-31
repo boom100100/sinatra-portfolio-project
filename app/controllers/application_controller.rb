@@ -10,6 +10,15 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/' do
-    'Hello, World!'
+    erb :index
+  end
+
+  post '/login' do
+    @type = params[:type]
+    erb :login
+  end
+
+  get '/signup' do
+    erb :signup
   end
 end
