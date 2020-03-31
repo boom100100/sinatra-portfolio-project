@@ -1,0 +1,9 @@
+<form action='/consultants/<%= @consultant.id %>' method="POST">
+
+  Email Address: <input type='text' name='email', value='<%= @consultant.email %>'><br />
+  Admin: <input type='checkbox' name='admin' value='<%= @consultant.admin %>'><br />
+  Password: <input type='text' name='password'><br />
+  Password Confirmation: <input type='text' name='password_confirmation'><br />
+
+  <input type='submit' value='Edit Consultant'>
+</form>

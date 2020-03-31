@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Fwitter</title>
+    <style>
+      .btn-link {
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #0000EE;
+        padding: 0;
+        text-decoration: underline;
+        font-family: inherit;
+        font-size: inherit;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div> Testing layout. </div>
+<%= yield %>
+
+<script>
+  function addConsultant() {
+    document.getElementsByClassName('clients')[0].style.display = 'none';
+    document.getElementsByClassName('consultants')[0].style.display = 'block';
+  }
+  function addClient() {
+    document.getElementsByClassName('consultants')[0].style.display = 'none';
+    document.getElementsByClassName('clients')[0].style.display = 'block';
+  }
+</script>
+</body>
+</html>

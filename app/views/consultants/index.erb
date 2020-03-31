@@ -1,0 +1,4 @@
+<% @consultants.each do |consultant|%>
+  <a href='/consultants/<%= consultant.id %>'><%= consultant.email %></a><br />
+  <%= consultant.admin ? 'Administrator' : 'Agent' %><br /><br />
+<% end %>

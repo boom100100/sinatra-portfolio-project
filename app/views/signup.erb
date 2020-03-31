@@ -1,0 +1,21 @@
+<h1>What kind of user will you be?</h1>
+
+<button onclick="addConsultant()">Consultant</button><button onclick="addClient()">Client</button><br /><br />
+
+<form action='/consultants' method="POST" class='consultants' style='display:none;'>
+  Consultant<br /><br />
+  Username: <input type='text' name='username'><br />
+  Password: <input type='text' name='password'><br />
+  Password Confirmation: <input type='text' name='password_confirmation'><br />
+
+  <input type='submit' value='Sign Up'>
+</form>
+
+<form action='/clients' method="POST" class='clients' style='display:none;'>
+  Client<br /><br />
+  Username: <input type='text' name='username'><br />
+  Password: <input type='text' name='password'><br />
+  Password Confirmation: <input type='text' name='password_confirmation'><br />
+
+  <input type='submit' value='Sign Up'>
+</form>
