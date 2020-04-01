@@ -1,4 +1,3 @@
 <%= @client.email %>
-<%= @client.admin ? 'Administrator' : 'Agent' %>
 <form action='/clients/<%= @client.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
-<form action='/clients/<%= @client.id %>/delete' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+<form action='/clients/<%= @client.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>

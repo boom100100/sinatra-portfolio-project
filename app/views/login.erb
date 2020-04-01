@@ -1,6 +1,10 @@
-<form action='/<%= @type %>' method="POST">
+<form action='/login' method="POST">
 
-  <input type='text' name='username'>
+  <select id="account_type" name="account_type">
+    <option value="client">Client</option>
+    <option value="consultant">Consultant</option>
+  </select>
+  <input type='text' name='email'>
   <input type='text' name='password'>
 
   <input type='submit' value='Sign In'>

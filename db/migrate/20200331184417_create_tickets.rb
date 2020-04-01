@@ -6,7 +6,7 @@ class CreateTickets < ActiveRecord::Migration[5.2]
       t.string :details
       t.boolean :complete
       t.integer :client_id
-      t.integer :tech_supporter_id
+      t.integer :consultant_id
 
       t.timestamps
     end

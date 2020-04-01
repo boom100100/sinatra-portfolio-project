@@ -1,8 +1,8 @@
 <form action='/clients/<%= @client.id %>' method="POST">
 
   Email Address: <input type='text' name='email', value='<%= @client.email %>'><br />
-  Password: <input type='text' name='password'><br />
-  Password Confirmation: <input type='text' name='password_confirmation'><br />
+  Password: <input type='text' name='password' value=''><br />
+  Password Confirmation: <input type='text' name='password_confirmation'  value=''><br />
 
   <input type='submit' value='Edit Client'>
 </form>

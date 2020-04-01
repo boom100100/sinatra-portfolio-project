@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2020_03_31_184417) do
     t.string "details"
     t.boolean "complete"
     t.integer "client_id"
-    t.integer "tech_supporter_id"
+    t.integer "consultant_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

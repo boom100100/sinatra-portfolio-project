@@ -13,9 +13,44 @@ class ApplicationController < Sinatra::Base
     erb :index
   end
 
-  post '/login' do
-    @type = params[:type]
+  get '/login' do
     erb :login
+  end
+
+  post '/login' do
+    type = params[:account_type]
+    user = nil
+    if type == 'client'
+      user = Client.find_by(email: params[:email])
+    else
+      user = Consultant.find_by(email: params[:email])
+    end
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      session[:type] = type
+      if type == 'client'
+        session[:privilege] = type
+      elsif type == 'consultant'
+        is_admin = user.admin
+        if is_admin
+          session[:privilege] = 'admin'
+        else
+          session[:privilege] = type
+        end
+      end
+
+      redirect to "/#{type}s"
+    else
+      redirect to "/login"
+    end
+  end
+
+  get '/logout' do
+    #todo sign out
+    if session[:user_id]
+      session.clear
+    end
+    redirect '/login'
   end
 
   get '/signup' do

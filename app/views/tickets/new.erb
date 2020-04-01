@@ -1,0 +1,21 @@
+<form action='/tickets' method="POST">
+
+  Name: <input type='text' name='name'><br />
+  Details: <input type='textarea' name='details'><br />
+  Complete: <select id="status" name="status">
+    <option value="open">Open</option>
+    <option value="complete">Complete</option>
+  </select>
+  Client: <select id="client" name="client">
+    <% @clients.each do |client| %>
+      <option value='client_<%= client.id %>'><%= client.email %></option>
+    <% end %>
+  </select>
+  Consultant: <select id="consultant" name="consultant">
+    <% @consultants.each do |consultant| %>
+      <option value='consultant_<%= consultant.id %>'><%= consultant.email %></option>
+    <% end %>
+  </select>
+
+  <input type='submit' value='Create Ticket'>
+</form>

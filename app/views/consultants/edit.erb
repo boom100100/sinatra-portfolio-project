@@ -1,7 +1,10 @@
 <form action='/consultants/<%= @consultant.id %>' method="POST">
 
   Email Address: <input type='text' name='email', value='<%= @consultant.email %>'><br />
-  Admin: <input type='checkbox' name='admin' value='<%= @consultant.admin %>'><br />
+  User Type: <select id="account_type" name="account_type">
+    <option value="admin">Admin</option>
+    <option value="agent">Agent</option>
+  </select>
   Password: <input type='text' name='password'><br />
   Password Confirmation: <input type='text' name='password_confirmation'><br />
 

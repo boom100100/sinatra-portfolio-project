@@ -1,80 +1,169 @@
 class ConsultantsController < ApplicationController
-  post '/consultants' do
-    #user doesn't exist, email and pw fields not empty, pw confirmation matches
-    if Consultant.find_by(email: params[:email]).nil? && params[:email] != '' && params[:password] != '' && params[:password] == params[:password_confirmation]
-      consultant = Consultant.create(email: params[:email], password: params[:password])
-      session[:user_id] = consultant.id
-      session[:type] = 'consultant'
-      consultant.admin ? session[:privilege] = 'admin' : session[:privilege] = 'agent'
-      erb :'consultants/index'
-    elsif !Consultant.find_by(email: params[:email]).nil?
-      'This user already exists.'
-    elsif params[:password] != ''
-      'User must have a password.'
-    elsif params[:password] == params[:password_confirmation]
-      'Passwords for user must match.'
+  get '/consultants' do
+    if session[:user_id]
+      if session[:type] == 'consultant'
+        @consultants = Consultant.all
+        erb :'consultants/index'
+      elsif session[:type] == 'client'
+        erb 'Clients are unable to see this page.'
+      end
     else
-      redirect '/signup'
+      erb 'You must sign in to view this page.'
     end
   end
 
-  get '/consultants' do
-    @consultants = Consultant.all
-    erb :'consultants/index'
+  post '/consultants' do
+    if session[:user_id]
+      #user doesn't exist, email and pw fields not empty, pw confirmation matches
+      if Consultant.find_by(email: params[:email]).nil? && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
+        consultant = Consultant.create(email: params[:email], admin: params[:admin], password: params[:password])
+        session[:user_id] = consultant.id
+        session[:type] = 'consultant'
+        if consultant.admin
+          session[:privilege] = 'admin'
+        else
+          session[:privilege] = 'consultant'
+        end
+
+        redirect '/consultants'
+
+      elsif !Consultant.find_by(email: params[:email]).nil?
+        erb 'This user already exists.'
+      elsif params[:password] != ''
+        erb 'Consultant must have a password.'
+      elsif params[:password] == params[:password_confirmation]
+        erb 'Passwords for consultant must match.'
+      else
+        redirect '/consultants'
+      end
+    else
+      erb 'You must sign in to view this page.'
+    end
+  end
+
+  get '/consultants/new' do
+    if session[:user_id]
+      if session[:privilege] == 'admin'
+        @consultant = Consultant.new
+        erb :'consultants/new'
+      else
+        erb 'Only an admin can view this page.'
+      end
+    else
+      erb 'You must sign in to view this page.'
+    end
   end
 
   get '/consultants/:id' do
     @consultant = Consultant.find_by(id: params[:id])
-    if session[:user_id]
-      #if is self or is admin
-      if (session[:user_id] == @consultant.id && session[:user_type].is_a?(Consultant)) || (session[:privilege] == 'admin')
-        erb :'consultants/show'
+    if @consultant
+      if session[:user_id]
+        #visitor is self or is admin
+        if self_or_admin?(@consultant.id, session[:type], 'consultant', session[:privilege])
+          erb :'consultants/show'
+        else
+          erb 'Only the account owner or an admin can view this page.'
+        end
       else
-        'Only the account owner or an admin can view this page.'
+        erb 'Only signed in users can view this page.'
       end
     else
-      'Only signed in users can view this page.'
+      erb 'Consultant doesn\'t exist.'
     end
   end
 
   post '/consultants/:id' do
     @consultant = Consultant.find_by(id: params[:id])
-    #user exists, not replacing other user, email and pw fields not empty, pw confirmation matches
-    if @consultant && Consultant.find_by(email: params[:email]).nil? && params[:email] != '' && params[:password] != '' && params[:password] == params[:password_confirmation]
-      @consultant.email = params[:email]
-    elsif @consultant.nil?
-      'This user doesn\'t exist.'
-    elsif !Consultant.find_by(email: params[:email]).nil?
-      "Could not replace user already using email address #{params[:email]}."
-    elsif params[:password] != ''
-      'Password can\'t be empty.'
-    elsif params[:password] == params[:password_confirmation]
-      'Passwords don\'t match.'
+
+    if @consultant
+      #visitor is self or admin, not duplicating email, email and pw fields not empty, pw confirmation matches
+      if self_or_admin?(@consultant.id, session[:type], 'consultant', session[:privilege]) && (Consultant.find_by(email: params[:email]).nil? || Consultant.find_by(email: params[:email]) == @consultant) && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
+        @consultant.email = params[:email]
+        params[:account_type] == 'admin' ? @consultant.admin = true : @consultant.admin = false
+        @consultant.password = params[:password]
+        @consultant.save
+        redirect "/consultants/#{params[:id]}"
+
+      #email not taken, is current user or doesn't exist, no password
+      elsif !email_empty?(params[:email]) && (Consultant.find_by(email: params[:email]).nil? || Consultant.find_by(email: params[:email]) == @consultant) && params[:password] == ''
+        @consultant.email = params[:email]
+        params[:account_type] == 'admin' ? @consultant.admin = true : @consultant.admin = false
+        @consultant.save
+        redirect "/consultants/#{params[:id]}"
+      elsif @consultant.nil?
+        erb 'This consultant doesn\'t exist.'
+      elsif !Consultant.find_by(email: params[:email]).nil?
+        erb "Could not replace consultant already using email address #{params[:email]}."
+      elsif params[:password] != ''
+        erb 'Password can\'t be empty.'
+      elsif params[:password] == params[:password_confirmation]
+        erb 'Passwords don\'t match.'
+      else
+        redirect "/consultants/#{params[:id]}"
+      end
     else
-      redirect "/consultants/#{params[:id]}"
+      erb 'Consultant doesn\'t exist.'
     end
   end
 
   get '/consultants/:id/edit' do
     @consultant = Consultant.find_by(id: params[:id])
-    #user exists, visitor is self or admin
-    if @consultant && ((@consultant.id == session[:user_id] && session[:type] == 'consultant') || session[:privilege] == 'admin')
-      erb :'consultants/edit'
-    #visitor is not self or admin
-    elsif @consultant.id != session[:user_id] && session[:privilege] != 'admin'
-      'You cannot edit this user\'s account.'
-    #user doesn't exist
+
+    if session[:user_id]
+      #user exists, visitor is self or admin
+      if @consultant && self_or_admin?(@consultant.id, session[:type], 'consultant', session[:privilege])
+        erb :'consultants/edit'
+      elsif @consultant.id != session[:user_id] && session[:privilege] != 'admin'
+        erb 'You cannot edit this user\'s account.'
+      #user doesn't exist
+      else
+        erb 'This is an invalid user.'
+      end
     else
-      'This is an invalid user.'
+      erb 'You must sign in to view this page.'
     end
   end
 
-  get '/consultants/new' do
-    if session[:privilege] == 'admin'
-      @consultant = Consultant.new
-      erb 'consultants/new'
+  delete '/consultants/:id' do # TODO:
+    if session[:user_id]
+      @consultant = Consultant.find_by(id: params[:id])
+      if @consultant
+        id = @consultant.id
+        if self_or_admin?(id, session[:type], 'consultant', session[:privilege])
+          @consultant.destroy
+          if is_self?(id, session[:privilege], 'consultant')
+            redirect '/login'
+          else
+            redirect '/consultants'
+          end
+        else
+          erb 'Only the account owner or an admin can view this page.'
+        end
+      else
+        erb 'This user doesn\'t exist.'
+      end
     else
-      redirect '/consultants'
+      erb 'Only signed in users can view this page.'
     end
+  end
+
+  private
+  def is_self?(id, session_type, type_comparison)
+    (id == session[:user_id] && session_type == type_comparison)
+  end
+
+  def self_or_admin?(id, session_type, type_comparison, session_privilege)
+    is_self?(id, session_type, type_comparison) || session_privilege == 'admin'
+  end
+
+  def email_empty?(email)
+    email == ''
+  end
+  def password_check?(password, password_confirmation)
+    password != '' && password == password_confirmation
+  end
+
+  def email_and_pw_good?(email, password, password_confirmation)
+    !email_empty?(email) && password_check?(password, password_confirmation)
   end
 end
