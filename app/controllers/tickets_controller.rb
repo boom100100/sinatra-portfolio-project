@@ -1,31 +1,58 @@
 class TicketsController < ApplicationController
   get '/tickets' do #todo try as client
     if session[:user_id]
-      if session[:type] == 'consultant'
-        @tickets = Ticket.all
-        erb :'tickets/index'
-      elsif session[:type] == 'client'
-        erb 'Clients are unable to see this page. Go to your profile page to view your tickets.'
+      @tickets = Ticket.all
+      if session[:type] == 'client'
+        @tickets = @tickets.select {|ticket| ticket.client_id == session[:user_id]}
       end
+      erb :'tickets/index'
     else
       erb 'You must sign in to view this page.'
     end
   end
 
-  get '/tickets/new' do #todo try as client
+  post '/tickets' do
+    if session[:user_id]
+      #ticket has name and details
+      if params[:name] != '' && params[:details] != ''
+        ticket = Ticket.create(name: params[:name], details: params[:details])
+        if params[:status] == 'open'
+          ticket.complete = false
+        elsif params[:status] == 'complete'
+          ticket.complete = true
+        end
+
+        if session[:type] = 'client'
+          ticket.client_id = session[:user_id]
+          #won't let client assign a consultant
+          #note: delete functionality won't reassign ticket - it will just be labeled as not belonging to anyone in show
+        else
+          ticket.consultant_id = Consultant.find_by(email: params[:consultant]).id
+          ticket.client_id = Client.find_by(email: params[:client]).id
+        end
+        ticket.save
+        redirect '/tickets'
+      elsif params[:name] == ''
+        erb 'Ticket must have a name.'
+      elsif params[:details] == ''
+        erb 'Ticket must have a description.'
+      end
+    else
+      erb 'You must be signed in to view this page.'
+    end
+  end
+
+  get '/tickets/new' do
     if session[:user_id]
       @clients = Client.all
       @consultants = Consultant.all
-      if session[:privilege] == 'client'
-        @current_user = Client.find_by(id: session[:user_id])
-        @current_user_privilege = 'client'
-      elsif session[:privilege] == 'consultant'
-        @current_user = Consultant.find_by(id: session[:user_id])
-        @current_user_privilege = 'consultant'
-      elsif session[:privilege] == 'admin'
-        @current_user = Consultant.find_by(id: session[:user_id])
-        @current_user_privilege = 'admin'
+
+      #limit dropdown menus for clients
+      if session[:type] == 'client'
+        @clients = @clients.select {|client| client.id == session[:user_id]}
+        @consultants = @consultants.select {|consultant| false}
       end
+
       erb :'tickets/new'
     else
       erb 'Only signed in users can view this page.'
@@ -34,10 +61,80 @@ class TicketsController < ApplicationController
 
   get '/tickets/:id' do
     @ticket = Ticket.find_by(id: params[:id])
+
     if @ticket
-      erb :'tickets/show'
+      if session[:user_id]
+        @tickets = Ticket.all
+        if session[:type] == 'client'
+
+          @client = Client.find_by(id: @ticket.client_id)
+          @consultant = Consultant.find_by(id: @ticket.consultant_id)
+          erb :'tickets/show'
+        end
+      end
     else
       erb 'Ticket doesn\'t exist.'
     end
   end
+
+  post '/tickets/:id' do
+    if session[:user_id]
+      #ticket has name and details
+      if params[:name] != '' && params[:details] != ''
+        ticket = Ticket.find_by(id: params[:id])
+        ticket.name = params[:name]
+        ticket.details = params[:details]
+
+        if params[:status] == 'open'
+          ticket.complete = false
+        elsif params[:status] == 'complete'
+          ticket.complete = true
+        end
+
+        if session[:type] = 'client'
+          ticket.client_id = session[:user_id]
+          #don't change consultant
+          #note: delete functionality won't reassign ticket - it will just be labeled as not belonging to anyone in show
+        else
+          ticket.consultant_id = Consultant.find_by(email: params[:consultant]).id
+          ticket.client_id = Client.find_by(email: params[:client]).id
+        end
+
+        ticket.save
+        redirect "/tickets/#{params[:id]}"
+
+      elsif params[:name] == ''
+        erb 'Ticket must have a name.'
+      elsif params[:details] != ''
+        erb 'Ticket must have a description.'
+      else
+        redirect "/tickets/#{params[:id]}"
+      end
+    else
+      erb 'You must be signed in to view this page.'
+    end
+  end
+
+  get '/tickets/:id/edit' do
+    @ticket = Ticket.find_by(id: params[:id])
+
+    if @ticket
+      @client = Client.find_by(id: @ticket.client_id)
+      @consultant = Consultant.find_by(id: @ticket.consultant_id)
+
+      @clients = Client.all
+      @consultants = Consultant.all
+      #limit dropdown menus for clients
+      if session[:type] == 'client'
+        @clients = @clients.select {|client| client.id == session[:user_id]}
+        @consultants = @consultants.select {|consultant| false}
+      end
+
+      erb :'tickets/edit'
+    else
+      erb 'Ticket doesn\'t exist.'
+    end
+  end
+
+
 end

@@ -1,2 +1,27 @@
 <h1><%= @ticket.name %></h1>
+
+<p>Ticket status:</p>
+<% if @ticket.complete %>
+  Complete
+<% else %>
+  Open
+<% end %>
+
 <p><%= @ticket.details %></p>
+
+
+<form action='/tickets/<%= @ticket.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
+<form action='/tickets/<%= @ticket.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+
+
+<% if @consultant %>
+  Assigned to: <a href='/consultants/<%= @consultant.id %>'><%= @consultant.email %></a>
+<% else %>
+  <p>This ticket is not assigned to a consultant.</p>
+<% end %>
+<br />
+<% if @client %>
+  Requester: <a href='/clients/<%= @client.id %>'><%= @client.email %></a>
+<% else %>
+  <p>This ticket is not assigned to a client.</p>
+<% end %>

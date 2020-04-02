@@ -8,12 +8,12 @@
   </select>
   Client: <select id="client" name="client">
     <% @clients.each do |client| %>
-      <option value='client_<%= client.id %>'><%= client.email %></option>
+      <option value='<%= client.email %>'><%= client.email %></option>
     <% end %>
   </select>
   Consultant: <select id="consultant" name="consultant">
     <% @consultants.each do |consultant| %>
-      <option value='consultant_<%= consultant.id %>'><%= consultant.email %></option>
+      <option value='<%= consultant.email %>'><%= consultant.email %></option>
     <% end %>
   </select>
 

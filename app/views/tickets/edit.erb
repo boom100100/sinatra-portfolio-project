@@ -1,0 +1,30 @@
+<form action='/tickets/<%= @ticket.id %>' method="POST">
+
+  Name: <input type='text' name='name' value='<%= @ticket.name %>'><br />
+  Details: <input type='text' name='details' value='<%= @ticket.details %>'><br />
+  Complete: <select id="status" name="status" value='<%= @ticket.details %>'>
+    <option value="open">Open</option>
+    <% if @ticket.complete %>
+      <option value="complete" selected="selected">Complete</option>
+    <% else %>
+      <option value="complete">Complete</option>
+    <% end %>
+  </select>
+  Client: <select id="client" name="client">
+    <% @clients.each do |client| %>
+    <% if @ticket.client_id == client.id %>
+      <option value='<%= client.email %>' selected='selected'><%= client.email %></option>
+    <% else %>
+      <option value='<%= client.email %>'><%= client.email %></option>
+    <% end %>
+
+    <% end %>
+  </select>
+  Consultant: <select id="consultant" name="consultant">
+    <% @consultants.each do |consultant| %>
+      <option value='<%= consultant.email %>'><%= consultant.email %></option>
+    <% end %>
+  </select>
+
+  <input type='submit' value='Edit Ticket'>
+</form>
