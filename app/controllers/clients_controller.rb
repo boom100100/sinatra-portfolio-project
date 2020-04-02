@@ -35,6 +35,7 @@ class ClientsController < ApplicationController
   get '/clients/:id' do
     @client = Client.find_by(id: params[:id])
     if @client
+      @tickets = Ticket.all.select {|ticket| ticket.client_id == @client.id }
       if session[:user_id]
         #visitor is self or is admin
         if self_or_admin?(@client.id, session[:privilege], 'client')

@@ -158,6 +158,6 @@ class TicketsController < ApplicationController
       erb 'You must sign in to view this page.'
     end
   end
-  end
+  
 
 end

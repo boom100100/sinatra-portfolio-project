@@ -1,3 +1,11 @@
 <%= @client.email %>
 <form action='/clients/<%= @client.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
 <form action='/clients/<%= @client.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+
+<% if @tickets %>
+<h3>Tickets</h3>
+
+  <% @tickets.each do |ticket| %>
+    <a href='/tickets/<%= ticket.id %>'><%= ticket.name %></a><br />
+  <% end %>
+<% end %>
