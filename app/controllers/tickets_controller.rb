@@ -22,13 +22,13 @@ class TicketsController < ApplicationController
           ticket.complete = true
         end
 
-        if session[:type] = 'client'
+        if session[:type] == 'client'
           ticket.client_id = session[:user_id]
           #won't let client assign a consultant
           #note: delete functionality won't reassign ticket - it will just be labeled as not belonging to anyone in show
         else
-          ticket.consultant_id = Consultant.find_by(email: params[:consultant]).id
-          ticket.client_id = Client.find_by(email: params[:client]).id
+          ticket.consultant_id = Consultant.find_by(id: params[:consultant]).id
+          ticket.client_id = Client.find_by(id: params[:client]).id
         end
         ticket.save
         redirect '/tickets'
@@ -47,7 +47,7 @@ class TicketsController < ApplicationController
       @clients = Client.all
       @consultants = Consultant.all
 
-      #limit dropdown menus for clients
+      #limit dropdown menus for client users
       if session[:type] == 'client'
         @clients = @clients.select {|client| client.id == session[:user_id]}
         @consultants = @consultants.select {|consultant| false}
@@ -63,17 +63,17 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find_by(id: params[:id])
     if session[:user_id]
       if @ticket
-        @tickets = Ticket.all
         @client = Client.find_by(id: @ticket.client_id)
         @consultant = Consultant.find_by(id: @ticket.consultant_id)
 
-        if session[:type] == 'client' && @client.id == @ticket.client_id
+        if session[:type] == 'client' && session[:user_id] == @ticket.client_id
           erb :'tickets/show'
         elsif session[:type] == 'consultant'
           erb :'tickets/show'
         else
           erb 'You can only see your own tickets.'
         end
+
       else
         erb 'Ticket doesn\'t exist.'
       end
@@ -96,8 +96,7 @@ class TicketsController < ApplicationController
           ticket.complete = true
         end
 
-        if session[:type] = 'consultant'
-
+        if session[:type] == 'consultant'
           #don't change consultant or client for client
           #note: delete functionality won't reassign ticket - it will just be labeled as not belonging to anyone in show
 
@@ -142,5 +141,23 @@ class TicketsController < ApplicationController
     end
   end
 
+  delete '/tickets/:id' do
+    @ticket = Ticket.find_by(params[:id])
+    if session[:user_id]
+      if @ticket
+        if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
+          @ticket.destroy
+          redirect '/tickets'
+        else
+          erb 'You can only delete your own tickets.'
+        end
+      else
+        erb 'This ticket doesn\'t exist.'
+      end
+    else
+      erb 'You must sign in to view this page.'
+    end
+  end
+  end
 
 end

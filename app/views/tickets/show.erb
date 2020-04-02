@@ -11,10 +11,8 @@
 
 
 <form action='/tickets/<%= @ticket.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
-<form action='/tickets/<%= @ticket.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
-
-
 <% if @consultant %>
+  <form action='/tickets/<%= @ticket.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
   Assigned to: <a href='/consultants/<%= @consultant.id %>'><%= @consultant.email %></a>
 <% else %>
   <p>This ticket is not assigned to a consultant.</p>

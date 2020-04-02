@@ -1,5 +1,5 @@
 <h1>Tickets</h1>
-
+<a href='/tickets/new'>New Ticket</a>
 <% @tickets.each do |ticket| %>
   <a href='/tickets/<%=ticket.id%>'><%=ticket.name%></a><br />
 <% end %>
