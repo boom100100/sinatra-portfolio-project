@@ -1,8 +1,12 @@
 <%= @consultant.email %>
 <%= @consultant.admin ? 'Administrator' : 'Agent' %>
 
-<form action='/consultants/<%= @consultant.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
-<form action='/consultants/<%= @consultant.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+<% if @edit_access %>
+  <form action='/consultants/<%= @consultant.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
+<% elsif @session_privilege == 'admin' %>
+  <form action='/consultants/<%= @consultant.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
+  <form action='/consultants/<%= @consultant.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+<% end %>
 
 <% if @tickets %>
   <h3>Tickets</h3>

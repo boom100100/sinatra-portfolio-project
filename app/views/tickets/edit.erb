@@ -1,12 +1,13 @@
 <form action='/tickets/<%= @ticket.id %>' method="POST">
 
   Name: <input type='text' name='name' value='<%= @ticket.name %>'><br />
-  Details: <textarea name='details' value='<%= @ticket.details %>'></textarea><br />
-  Complete: <select id="status" name="status" value='<%= @ticket.details %>'>
-    <option value="open">Open</option>
+  Details: <textarea name='details' ><%= @ticket.details %></textarea><br />
+  Status: <select id="status" name="status">
     <% if @ticket.complete %>
+      <option value="open">Open</option>
       <option value="complete" selected="selected">Complete</option>
     <% else %>
+      <option value="open" selected="selected">Open</option>
       <option value="complete">Complete</option>
     <% end %>
   </select>

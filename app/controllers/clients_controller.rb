@@ -37,8 +37,9 @@ class ClientsController < ApplicationController
     if @client
       @tickets = Ticket.all.select {|ticket| ticket.client_id == @client.id }
       if session[:user_id]
-        #visitor is self or is admin
-        if self_or_admin?(@client.id, session[:privilege], 'client')
+        #visitor is self or consultant
+        if self_or_admin?(@client.id, session[:privilege], 'client') || session[:type] == 'consultant'
+          @session_privilege = session[:privilege]
           erb :'clients/show'
         else
           erb 'Only the account owner or an admin can view this page.'

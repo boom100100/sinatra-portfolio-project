@@ -5,8 +5,8 @@
 <form action='/consultants' method="POST" class='consultants' style='display:none;'>
   Consultant<br /><br />
   Email Address: <input type='text' name='email'><br />
-  Password: <input type='text' name='password'><br />
-  Password Confirmation: <input type='text' name='password_confirmation'><br />
+  Password: <input type='password' name='password'><br />
+  Password Confirmation: <input type='password' name='password_confirmation'><br />
 
   <input type='submit' value='Sign Up'>
 </form>
@@ -19,3 +19,14 @@
 
   <input type='submit' value='Sign Up'>
 </form>
+
+<script>
+  function addConsultant() {
+    document.getElementsByClassName('clients')[0].style.display = 'none';
+    document.getElementsByClassName('consultants')[0].style.display = 'block';
+  }
+  function addClient() {
+    document.getElementsByClassName('consultants')[0].style.display = 'none';
+    document.getElementsByClassName('clients')[0].style.display = 'block';
+  }
+</script>

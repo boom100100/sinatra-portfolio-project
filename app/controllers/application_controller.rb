@@ -40,13 +40,14 @@ class ApplicationController < Sinatra::Base
       end
 
       redirect to "/#{type}s"
+    elsif user
+      erb 'Enter the correct username or password to access this account.'
     else
-      redirect to "/login"
+      erb 'User not found. You must choose the correct account type to sign in.'
     end
   end
 
   get '/logout' do
-    #todo sign out
     if session[:user_id]
       session.clear
     end

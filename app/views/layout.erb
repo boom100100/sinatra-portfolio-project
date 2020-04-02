@@ -3,19 +3,20 @@
   <head>
     <title>TSN</title>
   </head>
-  <body>
-    <div> Testing layout. </div>
-<%= yield %>
 
-<script>
-  function addConsultant() {
-    document.getElementsByClassName('clients')[0].style.display = 'none';
-    document.getElementsByClassName('consultants')[0].style.display = 'block';
-  }
-  function addClient() {
-    document.getElementsByClassName('consultants')[0].style.display = 'none';
-    document.getElementsByClassName('clients')[0].style.display = 'block';
-  }
-</script>
-</body>
+  <body>
+    <% #remove last character if '/' %>
+    <% #create login/logout button %>
+
+    <header>
+
+      <% if session[:user_id] %>
+        <form action='/logout' method="GET"><input type='submit' name='submit' value='Log Out'></form>
+      <% elsif request.path_info != '/login' && request.path_info != '/' && request.path_info != '/signup' %>
+        <form action='/login' method="GET"><input type='submit' name='submit' value='Log In'></form>
+      <% end %>
+    </header>
+
+    <%= yield %>
+  </body>
 </html>

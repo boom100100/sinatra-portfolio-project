@@ -66,9 +66,8 @@ class TicketsController < ApplicationController
         @client = Client.find_by(id: @ticket.client_id)
         @consultant = Consultant.find_by(id: @ticket.consultant_id)
 
-        if session[:type] == 'client' && session[:user_id] == @ticket.client_id
-          erb :'tickets/show'
-        elsif session[:type] == 'consultant'
+        if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
+          @session_type = session[:type]
           erb :'tickets/show'
         else
           erb 'You can only see your own tickets.'
@@ -158,6 +157,6 @@ class TicketsController < ApplicationController
       erb 'You must sign in to view this page.'
     end
   end
-  
+
 
 end

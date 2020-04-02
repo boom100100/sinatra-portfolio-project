@@ -1,6 +1,9 @@
 <%= @client.email %>
-<form action='/clients/<%= @client.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
-<form action='/clients/<%= @client.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+
+<% if @session_privilege == 'admin' %>
+  <form action='/clients/<%= @client.id %>/edit' method='GET'><input type='submit' value='Edit'></form>
+  <form action='/clients/<%= @client.id %>' method='POST'><input type="hidden" name="_method" value="DELETE"><input type='hidden' value=''><input type='submit' value='Delete'></form>
+<% end %>
 
 <% if @tickets %>
 <h3>Tickets</h3>
