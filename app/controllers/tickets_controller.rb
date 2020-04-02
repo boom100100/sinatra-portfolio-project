@@ -59,21 +59,26 @@ class TicketsController < ApplicationController
     end
   end
 
-  get '/tickets/:id' do
+  get '/tickets/:id' do #todo
     @ticket = Ticket.find_by(id: params[:id])
-
-    if @ticket
-      if session[:user_id]
+    if session[:user_id]
+      if @ticket
         @tickets = Ticket.all
-        if session[:type] == 'client'
+        @client = Client.find_by(id: @ticket.client_id)
+        @consultant = Consultant.find_by(id: @ticket.consultant_id)
 
-          @client = Client.find_by(id: @ticket.client_id)
-          @consultant = Consultant.find_by(id: @ticket.consultant_id)
+        if session[:type] == 'client' && @client.id == @ticket.client_id
           erb :'tickets/show'
+        elsif session[:type] == 'consultant'
+          erb :'tickets/show'
+        else
+          erb 'You can only see your own tickets.'
         end
+      else
+        erb 'Ticket doesn\'t exist.'
       end
     else
-      erb 'Ticket doesn\'t exist.'
+      erb 'You must sign in to view this page.'
     end
   end
 
@@ -91,11 +96,11 @@ class TicketsController < ApplicationController
           ticket.complete = true
         end
 
-        if session[:type] = 'client'
-          ticket.client_id = session[:user_id]
-          #don't change consultant
+        if session[:type] = 'consultant'
+
+          #don't change consultant or client for client
           #note: delete functionality won't reassign ticket - it will just be labeled as not belonging to anyone in show
-        else
+
           ticket.consultant_id = Consultant.find_by(email: params[:consultant]).id
           ticket.client_id = Client.find_by(email: params[:client]).id
         end
@@ -117,6 +122,7 @@ class TicketsController < ApplicationController
 
   get '/tickets/:id/edit' do
     @ticket = Ticket.find_by(id: params[:id])
+    @session_type = session[:type]
 
     if @ticket
       @client = Client.find_by(id: @ticket.client_id)
