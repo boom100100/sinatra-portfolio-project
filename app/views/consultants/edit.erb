@@ -1,10 +1,12 @@
 <form action='/consultants/<%= @consultant.id %>' method="POST">
 
   Email Address: <input type='text' name='email', value='<%= @consultant.email %>'><br />
-  User Type: <select id="account_type" name="account_type">
-    <option value="admin">Admin</option>
-    <option value="agent">Agent</option>
-  </select>
+  <% if @session_privilege == 'admin' %>
+    User Type: <select id="account_type" name="account_type">
+      <option value="admin">Admin</option>
+      <option value="agent">Agent</option>
+    </select>
+  <% end %>
   Password: <input type='password' name='password'><br />
   Password Confirmation: <input type='password' name='password_confirmation'><br />
 

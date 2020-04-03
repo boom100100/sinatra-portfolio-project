@@ -84,7 +84,7 @@ class ConsultantsController < ApplicationController
       #visitor is self or admin, not duplicating email, email and pw fields not empty, pw confirmation matches
       if self_or_admin?(@consultant.id, session[:type], 'consultant', session[:privilege]) && (Consultant.find_by(email: params[:email]).nil? || Consultant.find_by(email: params[:email]) == @consultant) && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
         @consultant.email = params[:email]
-        params[:account_type] == 'admin' ? @consultant.admin = true : @consultant.admin = false
+        params[:account_type] ? (params[:account_type] == 'admin' ? @consultant.admin = true : @consultant.admin = false) : nil
         @consultant.password = params[:password]
         @consultant.save
         redirect "/consultants/#{params[:id]}"
@@ -117,6 +117,7 @@ class ConsultantsController < ApplicationController
     if session[:user_id]
       #user exists, visitor is self or admin
       if @consultant && self_or_admin?(@consultant.id, session[:type], 'consultant', session[:privilege])
+        @session_privilege = session[:privilege]
         erb :'consultants/edit'
       elsif @consultant.id != session[:user_id] && session[:privilege] != 'admin'
         erb 'You cannot edit this user\'s account.'
