@@ -6,6 +6,7 @@ end
 
 use Rack::MethodOverride
 
+use CommentsController
 use TicketsController
 use ConsultantsController
 use ClientsController
