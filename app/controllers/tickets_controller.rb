@@ -1,5 +1,5 @@
 class TicketsController < ApplicationController
-  get '/tickets' do #todo try as client
+  get '/tickets' do
     if session[:user_id]
       @tickets = Ticket.all
       if session[:type] == 'client'
@@ -59,15 +59,17 @@ class TicketsController < ApplicationController
     end
   end
 
-  get '/tickets/:id' do #todo
+  get '/tickets/:id' do
     @ticket = Ticket.find_by(id: params[:id])
     if session[:user_id]
       if @ticket
         @client = Client.find_by(id: @ticket.client_id)
         @consultant = Consultant.find_by(id: @ticket.consultant_id)
-
+        
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
           @session_type = session[:type]
+          @user_id = session[:user_id]
+          @comments = Comment.all.select {|comment| comment.ticket_id == @ticket.id}
           erb :'tickets/show'
         else
           erb 'You can only see your own tickets.'

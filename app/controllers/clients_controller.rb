@@ -1,7 +1,12 @@
 class ClientsController < ApplicationController
   get '/clients' do
+    if session[:user_id]
+      @session_type = session[:type]
       @clients = Client.all
       erb :'clients/index'
+    else
+      erb 'You must sign in to view this page.'
+    end
   end
 
   post '/clients' do
@@ -57,7 +62,8 @@ class ClientsController < ApplicationController
 
     if @client
       #visitor is self or admin, not duplicating email, email and pw fields not empty, pw confirmation matches
-      if self_or_admin?(@client.id, session[:privilege], 'client') && Client.find_by(email: params[:email]).nil? && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
+      @new_client = Client.find_by(email: params[:email])
+      if self_or_admin?(@client.id, session[:privilege], 'client') && (@new_client.nil? || @new_client == @client) && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
         @client.email = params[:email]
         @client.password = params[:password]
         @client.save

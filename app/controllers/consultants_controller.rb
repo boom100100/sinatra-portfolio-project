@@ -2,6 +2,7 @@ class ConsultantsController < ApplicationController
   get '/consultants' do
     if session[:user_id]
       if session[:type] == 'consultant'
+        @session_privilege = session[:privilege]
         @consultants = Consultant.all
         erb :'consultants/index'
       elsif session[:type] == 'client'
