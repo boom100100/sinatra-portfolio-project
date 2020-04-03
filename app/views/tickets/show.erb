@@ -1,12 +1,13 @@
 <h1><%= @ticket.name %></h1>
 
-<p>Ticket status:</p>
-<% if @ticket.complete %>
-  Complete
-<% else %>
-  Open
-<% end %>
+<h4>Status:</h4>
 
+<%= @ticket.complete ? 'Complete' : 'Open' %><br /><br />
+
+<h4>Created on:</h4><%= @ticket.created_at.strftime("%Y-%m-%d, %I:%M%p") %><br /><br />
+<% if @ticket.created_at.strftime("%Y-%m-%d, %I:%M%p") != @ticket.updated_at.strftime("%Y-%m-%d, %I:%M%p") %><h4>Last updated on:</h4><%= @ticket.updated_at.strftime("%Y-%m-%d, %I:%M%p") %><br /><br /><% end %>
+
+<h4>Description:</h4>
 <p><%= @ticket.details %></p>
 
 
@@ -24,4 +25,42 @@
   Requester: <a href='/clients/<%= @client.id %>'><%= @client.email %></a>
 <% else %>
   <p>This ticket is not assigned to a client.</p>
+<% end %>
+
+<h4>Comments</h4>
+
+<form action='/comments' method='POST' >
+  <textarea name='content'></textarea><br />
+  <input type='hidden' name='ticket_id' value='<%= @ticket.id %>'><br />
+  <input type='submit' value='Create Comment'><br />
+</form>
+<br />
+
+<% if @comments %>
+  <% @comments.each do |comment| %>
+    <div>
+      <%= comment.content %>
+
+      <% @visitor_is_commentor = false %>
+      <% if comment.client_id %>
+
+      <% @comment_maker = Client.find_by(id: comment.client_id) %>
+      <% @visitor_is_commentor = true if @session_type == 'client' && @user_id == @comment_maker.id %>
+
+        <br />– <a href='/clients/<%= comment.client_id %>'><%= Client.find_by(id: comment.client_id).email %></a>, <%= comment.created_at.strftime("%Y-%m-%d, %I:%M%p") %>
+      <% elsif comment.consultant_id %>
+      <% @comment_maker = Consultant.find_by(id: comment.consultant_id) %>
+      <% @visitor_is_commentor = true if @session_type == 'consultant' && @user_id == @comment_maker.id %>
+
+
+        <br />– <a href='/consultants/<%= comment.consultant_id %>'><%= Consultant.find_by(id: comment.consultant_id).email %></a>, <%= comment.created_at.strftime("%Y-%m-%d, %I:%M%p") %>
+      <% end %>
+    </div>
+    <div>
+      <% if @visitor_is_commentor %><a href='/comments/<%= comment.id %>/edit'>Edit Comment</a><% end %>
+    </div>
+    <br />
+  <% end %>
+<% else %>
+  <p>There are no comments.</p>
 <% end %>

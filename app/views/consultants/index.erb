@@ -1,3 +1,9 @@
+<h1>Consultants</h1>
+
+<% if @session_privilege == 'admin' %>
+  <a href='/consultants/new'>Create Consultant</a><br /><br />
+<% end %>
+
 <% @consultants.each do |consultant|%>
   <a href='/consultants/<%= consultant.id %>'><%= consultant.email %></a><br />
   <%= consultant.admin ? 'Administrator' : 'Agent' %><br /><br />

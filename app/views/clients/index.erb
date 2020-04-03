@@ -1,4 +1,9 @@
+<h1>Clients</h1>
+
+<% if @session_type == 'consultant' %>
+  <a href='/clients/new'>Create Client</a><br /><br />
+<% end %>
+
 <% @clients.each do |client|%>
   <a href='/clients/<%= client.id %>'><%= client.email %></a><br />
-  
 <% end %>
