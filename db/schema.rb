@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_31_184417) do
+ActiveRecord::Schema.define(version: 2020_04_03_143846) do
 
   create_table "clients", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.string "content"
+    t.integer "ticket_id"
+    t.integer "client_id"
+    t.integer "consultant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "consultants", force: :cascade do |t|
