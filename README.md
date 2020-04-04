@@ -11,11 +11,13 @@ Dependencies:
 Install:
 
 Fork, then clone the repo:
-```git clone https://github.com/your-username/sinatra-portfolio-project.git
+```
+git clone https://github.com/your-username/sinatra-portfolio-project.git
 ```
 
-Run ```bundle install
-```
+Run ```
+bundle install
+
 Run ```rake db:migrate
 ```
 Run ```rake db:seed
