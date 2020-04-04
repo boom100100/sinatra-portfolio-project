@@ -17,13 +17,16 @@ git clone https://github.com/your-username/sinatra-portfolio-project.git
 
 Run ```
 bundle install
-
-Run ```rake db:migrate
 ```
-Run ```rake db:seed
+Run ```
+rake db:migrate
+```
+Run ```
+rake db:seed
 ```
 Running the app locally:
-Run ```shotgun
+Run ```
+shotgun
 ```
 Visit the URL shotgun specifies in the terminal.
 
