@@ -44,16 +44,15 @@
       <% @visitor_is_commentor = false %>
       <% if comment.client_id %>
 
-      <% @comment_maker = Client.find_by(id: comment.client_id) %>
-      <% @visitor_is_commentor = true if @session_type == 'client' && @user_id == @comment_maker.id %>
-
+      <% @visitor_is_commentor = true if @session_type == 'client' && @user_id == comment.client.id %>
         <br />– <a href='/clients/<%= comment.client_id %>'><%= Client.find_by(id: comment.client_id).email %></a>, <%= comment.created_at.strftime("%Y-%m-%d, %I:%M%p") %>
+
       <% elsif comment.consultant_id %>
-      <% @comment_maker = Consultant.find_by(id: comment.consultant_id) %>
-      <% @visitor_is_commentor = true if @session_type == 'consultant' && @user_id == @comment_maker.id %>
+
+      <% @visitor_is_commentor = true if @session_type == 'consultant' && @user_id == comment.consultant.id %>
 
 
-        <br />– <a href='/consultants/<%= comment.consultant_id %>'><%= Consultant.find_by(id: comment.consultant_id).email %></a>, <%= comment.created_at.strftime("%Y-%m-%d, %I:%M%p") %>
+        <br />– <a href='/consultants/<%= comment.consultant_id %>'><%= comment.consultant.email %></a>, <%= comment.created_at.strftime("%Y-%m-%d, %I:%M%p") %>
       <% end %>
     </div>
     <div>
