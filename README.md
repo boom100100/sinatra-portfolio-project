@@ -8,22 +8,26 @@ https://github.com/boom100100/sinatra-portfolio-project/blob/master/LICENSE.md
 Dependencies:
 (none)
 
-Use:
+Install:
+
+Fork, then clone the repo:
+```git clone https://github.com/your-username/sinatra-portfolio-project.git
+```
+
 Run ```bundle install
 ```
+Run ```rake db:migrate
+```
+Run ```rake db:seed
+```
+Running the app locally:
 Run ```shotgun
 ```
 Visit the URL shotgun specifies in the terminal.
 
 Contributing:
 
-Fork, then clone the repo:
-
-git clone https://github.com/your-username/sinatra-portfolio-project.git
-
-Install the bundle:
-```bundle install
-```
+Install and run via instructions mentioned above.
 
 Make changes, and test them via the web interface.
 
