@@ -63,9 +63,9 @@ class TicketsController < ApplicationController
     @ticket = Ticket.find_by(id: params[:id])
     if session[:user_id]
       if @ticket
-        @client = Client.find_by(id: @ticket.client_id)
-        @consultant = Consultant.find_by(id: @ticket.consultant_id)
-        
+        @client = @ticket.client
+        @consultant = @ticket.consultant
+
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
           @session_type = session[:type]
           @user_id = session[:user_id]

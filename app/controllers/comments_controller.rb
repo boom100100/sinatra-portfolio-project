@@ -27,7 +27,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  post '/comments/:id' do # TODO: comments/edit must have form that posts here if user is creator of comment
+  post '/comments/:id' do
     if session[:user_id]
       @comment = Comment.find_by(id: params[:id])
 
@@ -87,7 +87,6 @@ class CommentsController < ApplicationController
         else
           erb 'You can only edit your own comments.'
         end
-
       else
         erb 'Ticket doesn\'t exist.'
       end
@@ -100,8 +99,8 @@ class CommentsController < ApplicationController
 
   def is_creator?(comment)
     comment.consultant_id ? comment_creator_type = 'consultant' : comment.client_id ? comment_creator_type = 'client' : nil
-    comment_creator_type == 'consultant' ? creator = Consultant.find_by(id: comment.consultant_id) : comment_creator_type == 'client' ? creator = Client.find_by(id: comment.client_id) : nil
-    (session[:type] == comment_creator_type && (creator.id == comment.consultant_id || creator.id == comment.client_id)) ? is_creator = true : is_creator = false
+    comment_creator_type == 'consultant' ? creator = comment.consultant : comment_creator_type == 'client' ? creator = comment.client : nil
+    (session[:type] == comment_creator_type && (creator.id == comment.consultant_id || creator.id == comment.client_id)) ? true : false
 
   end
 end
