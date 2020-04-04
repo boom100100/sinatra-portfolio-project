@@ -125,8 +125,6 @@ class TicketsController < ApplicationController
     @session_type = session[:type]
 
     if @ticket
-      @client = Client.find_by(id: @ticket.client_id)
-      @consultant = Consultant.find_by(id: @ticket.consultant_id)
 
       @clients = Client.all
       @consultants = Consultant.all
@@ -147,7 +145,9 @@ class TicketsController < ApplicationController
     if session[:user_id]
       if @ticket
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
+          id = @ticket.id
           @ticket.destroy
+          Comment.all.select {|comment| comment.ticket_id == id }.each {|comment| comment.destroy}
           redirect '/tickets'
         else
           erb 'You can only delete your own tickets.'
