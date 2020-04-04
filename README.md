@@ -15,7 +15,7 @@ Fork, then clone the repo:
 git clone https://github.com/your-username/sinatra-portfolio-project.git
 ```
 
-Install gems:
+Install gems (see Gemfile for version of rails):
 ```
 bundle install
 ```
