@@ -15,20 +15,19 @@ Fork, then clone the repo:
 git clone https://github.com/your-username/sinatra-portfolio-project.git
 ```
 
-Run
+Install gems:
 ```
 bundle install
 ```
-Run
+Set up database:
 ```
 rake db:migrate
 ```
-Run
+Seed database:
 ```
 rake db:seed
 ```
 Running the app locally:
-Run
 ```
 shotgun
 ```
