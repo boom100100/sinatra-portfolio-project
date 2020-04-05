@@ -1,5 +1,9 @@
 <h1>Welcome to the Technical Support Network!</h1>
 
-<p>Please <a href='/login'>log in</a>.</p>
+<% if session[:user_id] %>
+  <p>Please proceed to <a href='/<%= session[:type] %>s/<%= session[:user_id] %>'>your account</a>.</p>
+<% else %>
 
-<p>You may also <a href='/signup'>sign up here</a>.</p>
+  <p>Please <a href='/login'>log in</a>.</p>
+  <p>You may also <a href='/signup'>sign up here</a>.</p>
+<% end %>
