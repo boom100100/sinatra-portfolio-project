@@ -14,32 +14,30 @@ class ConsultantsController < ApplicationController
   end
 
   post '/consultants' do
-    if session[:user_id]
-      #user doesn't exist, email and pw fields not empty, pw confirmation matches
-      if Consultant.find_by(email: params[:email]).nil? && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
-        consultant = Consultant.create(email: params[:email], admin: params[:admin], password: params[:password])
-        session[:user_id] = consultant.id
-        session[:type] = 'consultant'
-        if consultant.admin
-          session[:privilege] = 'admin'
-        else
-          session[:privilege] = 'consultant'
-        end
 
-        redirect '/consultants'
-
-      elsif !Consultant.find_by(email: params[:email]).nil?
-        erb 'This user already exists.'
-      elsif params[:password] != ''
-        erb 'Consultant must have a password.'
-      elsif params[:password] == params[:password_confirmation]
-        erb 'Passwords for consultant must match.'
+    #user doesn't exist, email and pw fields not empty, pw confirmation matches
+    if Consultant.find_by(email: params[:email]).nil? && email_and_pw_good?(params[:email], params[:password], params[:password_confirmation])
+      consultant = Consultant.create(email: params[:email], admin: params[:admin], password: params[:password])
+      session[:user_id] = consultant.id
+      session[:type] = 'consultant'
+      if consultant.admin
+        session[:privilege] = 'admin'
       else
-        redirect '/consultants'
+        session[:privilege] = 'consultant'
       end
+
+      redirect '/consultants'
+
+    elsif !Consultant.find_by(email: params[:email]).nil?
+      erb 'This user already exists.'
+    elsif params[:password] != ''
+      erb 'Consultant must have a password.'
+    elsif params[:password] == params[:password_confirmation]
+      erb 'Passwords for consultant must match.'
     else
-      erb 'You must sign in to view this page.'
+      redirect '/consultants'
     end
+
   end
 
   get '/consultants/new/?' do
