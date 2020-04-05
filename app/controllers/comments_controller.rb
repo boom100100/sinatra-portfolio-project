@@ -72,7 +72,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  get '/comments/:id/edit' do
+  get '/comments/:id/edit/?' do
     @comment = Comment.find_by(id: params[:id])
     if session[:user_id]
       if @comment

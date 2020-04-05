@@ -1,5 +1,5 @@
 class TicketsController < ApplicationController
-  get '/tickets' do
+  get '/tickets/?' do
     if session[:user_id]
       @tickets = Ticket.all
       if session[:type] == 'client'
@@ -42,7 +42,7 @@ class TicketsController < ApplicationController
     end
   end
 
-  get '/tickets/new' do
+  get '/tickets/new/?' do
     if session[:user_id]
       @clients = Client.all
       @consultants = Consultant.all
@@ -59,7 +59,7 @@ class TicketsController < ApplicationController
     end
   end
 
-  get '/tickets/:id' do
+  get '/tickets/:id/?' do
     @ticket = Ticket.find_by(id: params[:id])
     if session[:user_id]
       if @ticket
@@ -120,7 +120,7 @@ class TicketsController < ApplicationController
     end
   end
 
-  get '/tickets/:id/edit' do
+  get '/tickets/:id/edit/?' do
     @ticket = Ticket.find_by(id: params[:id])
     @session_type = session[:type]
 

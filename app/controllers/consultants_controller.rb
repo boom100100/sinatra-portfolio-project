@@ -1,5 +1,5 @@
 class ConsultantsController < ApplicationController
-  get '/consultants' do
+  get '/consultants/?' do
     if session[:user_id]
       if session[:type] == 'consultant'
         @session_privilege = session[:privilege]
@@ -42,7 +42,7 @@ class ConsultantsController < ApplicationController
     end
   end
 
-  get '/consultants/new' do
+  get '/consultants/new/?' do
     if session[:user_id]
       if session[:privilege] == 'admin'
         @consultant = Consultant.new
@@ -55,7 +55,7 @@ class ConsultantsController < ApplicationController
     end
   end
 
-  get '/consultants/:id' do
+  get '/consultants/:id/?' do
     @consultant = Consultant.find_by(id: params[:id])
     if @consultant
       @tickets = Ticket.all.select {|ticket| ticket.consultant_id == @consultant.id }
@@ -111,7 +111,7 @@ class ConsultantsController < ApplicationController
     end
   end
 
-  get '/consultants/:id/edit' do
+  get '/consultants/:id/edit/?' do
     @consultant = Consultant.find_by(id: params[:id])
 
     if session[:user_id]

@@ -1,7 +1,7 @@
 class ClientsController < ApplicationController
-  get '/clients' do
+  get '/clients/?' do
     if session[:user_id]
-      @session_type = session[:type]
+      @session_privilege = session[:privilege]
       @clients = Client.all
       erb :'clients/index'
     else
@@ -28,7 +28,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  get '/clients/new' do
+  get '/clients/new/?' do
     if session[:privilege] == 'admin'
       @client = Client.new
       erb :'clients/new'
@@ -37,7 +37,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  get '/clients/:id' do
+  get '/clients/:id/?' do
     @client = Client.find_by(id: params[:id])
     if @client
       @tickets = Ticket.all.select {|ticket| ticket.client_id == @client.id }
@@ -90,7 +90,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  get '/clients/:id/edit' do
+  get '/clients/:id/edit/?' do
     @client = Client.find_by(id: params[:id])
     #user exists, visitor is self or admin
     if @client && self_or_admin?(@client.id, session[:privilege], 'client')

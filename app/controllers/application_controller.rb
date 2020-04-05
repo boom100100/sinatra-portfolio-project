@@ -9,11 +9,11 @@ class ApplicationController < Sinatra::Base
     set :session_secret, 'password_security'
   end
 
-  get '/' do
+  get '/?' do
     erb :index
   end
 
-  get '/login' do
+  get '/login/?' do
     erb :login
   end
 
@@ -47,14 +47,14 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  get '/logout' do
+  get '/logout/?' do
     if session[:user_id]
       session.clear
     end
     redirect '/login'
   end
 
-  get '/signup' do
+  get '/signup/?' do
     erb :signup
   end
 end
