@@ -4,6 +4,14 @@
     <title>TSN</title>
 
     <style>
+
+      ul.nav {
+        list-style-type: none;
+        margin: -10px;
+        padding: 10px;
+        overflow: hidden;
+        background-color: #333;
+      }
       li {
         display: inline;
       }
@@ -12,12 +20,13 @@
         -webkit-appearance: button;
         -moz-appearance: button;
         appearance: button;
-
+        margin:-10px 0 -10px 0;
+        padding:10px;
         text-decoration: none;
-        color: initial;
+        color: #dddddd;
       }
 
-      a:hover {
+      a.button:hover {
         background-color: gray;
       }
     </style>
@@ -28,7 +37,7 @@
     <header>
 
     </header>
-    <ul><%#nav bar %>
+    <ul class='nav'><%#nav bar %>
       <% if session[:user_id] %>
         <li><a class='button' href="/tickets">Tickets</a></li>
         <li><a class='button' href="/consultants">Consultants</a></li>
