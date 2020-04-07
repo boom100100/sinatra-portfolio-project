@@ -69,7 +69,7 @@ class TicketsController < ApplicationController
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
           @session_type = session[:type]
           @user_id = session[:user_id]
-          @comments = Comment.all.select {|comment| comment.ticket_id == @ticket.id}
+          #@comments = Comment.all.select {|comment| comment.ticket_id == @ticket.id}
           erb :'tickets/show'
         else
           erb 'You can only see your own tickets.'
@@ -146,8 +146,12 @@ class TicketsController < ApplicationController
       if @ticket
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
           id = @ticket.id
+          
+          @ticket.comments.each do |comment|
+            comment.destroy
+          end
           @ticket.destroy
-          Comment.all.select {|comment| comment.ticket_id == id }.each {|comment| comment.destroy}
+
           redirect '/tickets'
         else
           erb 'You can only delete your own tickets.'
