@@ -36,8 +36,8 @@
 </form>
 <br />
 
-<% if @comments %>
-  <% @comments.each do |comment| %>
+<% if @ticket.comments %>
+  <% @ticket.comments.each do |comment| %>
     <div>
       <%= comment.content %>
 
