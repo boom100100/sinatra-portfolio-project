@@ -56,7 +56,7 @@ class ConsultantsController < ApplicationController
   get '/consultants/:id/?' do
     @consultant = Consultant.find_by(id: params[:id])
     if @consultant
-      @tickets = Ticket.all.select {|ticket| ticket.consultant_id == @consultant.id }
+
       if session[:user_id]
         #visitor is self or is admin
         @edit_access = session[:privilege] == 'consultant' && session[:user_id] == @consultant.id
