@@ -57,7 +57,7 @@ class ClientsController < ApplicationController
     end
   end
 
-  post '/clients/:id' do
+  put '/clients/:id' do
     @client = Client.find_by(id: params[:id])
 
     if @client

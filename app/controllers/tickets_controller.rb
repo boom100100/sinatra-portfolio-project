@@ -83,7 +83,7 @@ class TicketsController < ApplicationController
     end
   end
 
-  post '/tickets/:id' do
+  put '/tickets/:id' do
     if session[:user_id]
       #ticket has name and details
       if params[:name] != '' && params[:details] != ''
@@ -146,7 +146,7 @@ class TicketsController < ApplicationController
       if @ticket
         if (session[:type] == 'client' && session[:user_id] == @ticket.client_id) || (session[:type] == 'consultant')
           id = @ticket.id
-          
+
           @ticket.comments.each do |comment|
             comment.destroy
           end

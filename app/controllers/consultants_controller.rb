@@ -75,7 +75,7 @@ class ConsultantsController < ApplicationController
     end
   end
 
-  post '/consultants/:id' do
+  put '/consultants/:id' do
     @consultant = Consultant.find_by(id: params[:id])
 
     if @consultant

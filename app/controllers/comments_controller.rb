@@ -27,7 +27,7 @@ class CommentsController < ApplicationController
     end
   end
 
-  post '/comments/:id' do
+  put '/comments/:id' do
     if session[:user_id]
       @comment = Comment.find_by(id: params[:id])
 
