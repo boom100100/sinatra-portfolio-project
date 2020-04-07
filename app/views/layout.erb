@@ -2,18 +2,42 @@
 <html>
   <head>
     <title>TSN</title>
+
+    <style>
+      li {
+        display: inline;
+      }
+
+      a.button {
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        appearance: button;
+
+        text-decoration: none;
+        color: initial;
+      }
+
+      a:hover {
+        background-color: gray;
+      }
+    </style>
   </head>
 
   <body>
 
     <header>
 
-      <% if session[:user_id] && request.path_info != '/' %>
-        <form action='/logout' method="GET"><input type='submit' name='submit' value='Log Out'></form>
-      <% elsif request.path_info != '/login' && request.path_info != '/' && request.path_info != '/signup' %>
-        <form action='/login' method="GET"><input type='submit' name='submit' value='Log In'></form>
-      <% end %>
     </header>
+    <ul><%#nav bar %>
+      <% if session[:user_id] %>
+        <li><a class='button' href="/tickets">Tickets</a></li>
+        <li><a class='button' href="/consultants">Consultants</a></li>
+        <li><a class='button' href="/clients">Clients</a></li>
+        <li><a class='button' href='/logout'>Log Out</a>
+      <% elsif request.path_info != '/login' && request.path_info != '/' && request.path_info != '/signup' %>
+        <li><a class='button' href='/login'>Log In</a>
+      <% end %>
+    </ul>
 
     <%= yield %>
   </body>
