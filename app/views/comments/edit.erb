@@ -1,6 +1,6 @@
 <form action='/comments/<%= @comment.id %>' method='POST'>
-<textarea name='content'><%= @comment.content %></textarea>
-<input type='submit' name='submit' value='Edit Comment'>
+  <input type="hidden" name="_method" value="PUT">
 
-
+  <textarea name='content'><%= @comment.content %></textarea>
+  <input type='submit' name='submit' value='Edit Comment'>
 </form>

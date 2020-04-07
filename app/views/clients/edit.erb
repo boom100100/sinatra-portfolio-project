@@ -1,4 +1,5 @@
 <form action='/clients/<%= @client.id %>' method="POST">
+  <input type="hidden" name="_method" value="PUT">
 
   Email Address: <input type='text' name='email', value='<%= @client.email %>'><br />
   Password: <input type='password' name='password' value=''><br />

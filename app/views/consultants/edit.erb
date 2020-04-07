@@ -1,4 +1,5 @@
 <form action='/consultants/<%= @consultant.id %>' method="POST">
+  <input type="hidden" name="_method" value="PUT">
 
   Email Address: <input type='text' name='email', value='<%= @consultant.email %>'><br />
   <% if @session_privilege == 'admin' %>

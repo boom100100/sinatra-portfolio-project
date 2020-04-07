@@ -1,4 +1,5 @@
 <form action='/tickets/<%= @ticket.id %>' method="POST">
+  <input type="hidden" name="_method" value="PUT">
 
   Name: <input type='text' name='name' value='<%= @ticket.name %>'><br />
   Details: <textarea name='details' ><%= @ticket.details %></textarea><br />
