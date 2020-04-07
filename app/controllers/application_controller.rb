@@ -28,15 +28,12 @@ class ApplicationController < Sinatra::Base
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       session[:type] = type
-      if type == 'client'
+      
+      is_admin = user.admin
+      if is_admin
+        session[:privilege] = 'admin'
+      else
         session[:privilege] = type
-      elsif type == 'consultant'
-        is_admin = user.admin
-        if is_admin
-          session[:privilege] = 'admin'
-        else
-          session[:privilege] = type
-        end
       end
 
       redirect to "/#{type}s"
