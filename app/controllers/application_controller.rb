@@ -28,8 +28,8 @@ class ApplicationController < Sinatra::Base
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       session[:type] = type
-      
-      is_admin = user.admin
+
+      user.instance_of?(Consultant) ? is_admin = user.admin : false
       if is_admin
         session[:privilege] = 'admin'
       else

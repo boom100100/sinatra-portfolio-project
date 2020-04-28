@@ -1,8 +1,46 @@
 <h1><%= @ticket.name %></h1>
 
-<h4>Status:</h4>
+<form action='/tickets/<%= @ticket.id %>' method="POST">
+  <input type="hidden" name="_method" value="PUT">
+  <input type='hidden' name='name' value='<%= @ticket.name %>'><br />
+  <input type='hidden' name='details' value='<%= @ticket.details %>'><br />
+  <h4>Status:</h4> <select id="status" name="status">
+    <% if @ticket.complete %>
+      <option value="open">Open</option>
+      <option value="complete" selected="selected">Complete</option>
+    <% else %>
+      <option value="open" selected="selected">Open</option>
+      <option value="complete">Complete</option>
+    <% end %>
+  </select>
 
-<%= @ticket.complete ? 'Complete' : 'Open' %><br /><br />
+
+<% if @session_type == 'consultant' %>
+  Client: <select id="client" name="client">
+    <% @clients.each do |client| %>
+    <% if @ticket.client_id == client.id %>
+      <option value='<%= client.email %>' selected='selected'><%= client.email %></option>
+    <% else %>
+      <option value='<%= client.email %>'><%= client.email %></option>
+    <% end %>
+
+    <% end %>
+  </select>
+  Consultant: <select id="consultant" name="consultant">
+    <% @consultants.each do |consultant| %>
+      <% if @ticket.consultant_id == consultant.id %>
+        <option value='<%= consultant.email %>' selected='selected'><%= consultant.email %></option>
+      <% else %>
+        <option value='<%= consultant.email %>'><%= consultant.email %></option>
+      <% end %>
+    <% end %>
+
+  </select>
+<% end %>
+
+<input type='submit' value='Change Status'>
+
+</form>
 
 <h4>Created on:</h4><%= @ticket.created_at.strftime("%Y-%m-%d, %I:%M%p") %><br /><br />
 <% if @ticket.created_at.strftime("%Y-%m-%d, %I:%M%p") != @ticket.updated_at.strftime("%Y-%m-%d, %I:%M%p") %><h4>Last updated on:</h4><%= @ticket.updated_at.strftime("%Y-%m-%d, %I:%M%p") %><br /><br /><% end %>
