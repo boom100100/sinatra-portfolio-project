@@ -21,4 +21,4 @@ end
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 5.2.4', '>= 5.2.4.1'
+gem 'rails', '~> 7.0.3'
